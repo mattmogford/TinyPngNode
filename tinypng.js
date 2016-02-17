@@ -43,6 +43,7 @@ function processDirectory( dir )
         }
 
         removeDSStore( files );
+        files = removeNonPNGorJPEG( files );
         if( files.length === 0 )
         {
             console.log( "There are no files in the " + fullInDir + " folder" );
@@ -67,6 +68,7 @@ function processDirectory( dir )
                 {
                     if( err )
                     {
+                        console.log( err );
                         console.log( err.message );
                         exit();
                     }
@@ -79,6 +81,21 @@ function processDirectory( dir )
             } )( files[ i ] );
         }
     } );
+}
+
+function removeNonPNGorJPEG( files )
+{
+    var filesClone = [];
+    for( var i = 0; i < files.length; i++ )
+    {
+        var fileSplit = files[ i ].split( "." );
+        var ext = fileSplit[ fileSplit.length - 1 ];
+        if( ( ext === "png" ) || ( ext === "jpg" ) || ( ext === "jpeg" ) )
+        {
+            filesClone.push( files[ i ] );
+        }
+    }
+    return filesClone;
 }
 
 function finishedDirectory( files, completedFiles )
