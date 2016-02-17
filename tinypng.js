@@ -22,17 +22,25 @@ var server = http.createServer( function( req, res )
 
     checkInDirExists();
 
-    processDirectory( "" );
+    processDirectory( "", "" );
 });
 server.listen( config.port );
 
 
-function processDirectory( dir )
+function processDirectory( dir, parentDir )
 {
     var completedFiles = [];
-    var fullInDir = ( dir === "" ) ? ( mainDir + inDir + "/" + dir ) : ( mainDir + inDir + "/" + dir + "/" );
-    var fullOutDir = ( dir === "" ) ? ( mainDir + outDir + "/" + dir ) : ( mainDir + outDir + "/" + dir + "/" );
+    // var fullInDir = ( dir === "" ) ? ( mainDir + inDir + "/" + dir ) : ( mainDir + inDir + "/" + dir + "/" );
+    var fullInDir = ( dir === "" ) ? ( mainDir + inDir + "/" + dir ) : ( parentDir + dir + "/" );
+    var fullOutDir = ( dir === "" ) ? ( mainDir + outDir + "/" + dir ) : ( parentDir.replace( "/in/", "/out/" ) + dir + "/" );
     createDirIfNotExists( fullOutDir );
+
+    console.log( "******" );
+    console.log( "fullInDir " + fullInDir );
+    console.log( "fullOutDir " + fullOutDir );
+    console.log( "dir " + dir );
+    console.log( "parentDir " + parentDir );
+    console.log( "******" );
 
     fs.readdir( fullInDir, ( err, files ) =>
     {
@@ -84,6 +92,22 @@ function processDirectory( dir )
     } );
 }
 
+function finishedDirectory( files, completedFiles )
+{
+    if( completedFiles.length === files.length )
+    {
+        if( dirsToRecurseArray.length )
+        {
+            var dirToRecurse = dirsToRecurseArray.splice( 0, 1 )[ 0 ];
+            processDirectory( dirToRecurse.dir, dirToRecurse.parentDir );
+        }
+        else
+        {
+            exit();
+        }
+    }
+}
+
 function removeNonPNGorJPEG( files )
 {
     var filesClone = [];
@@ -97,21 +121,6 @@ function removeNonPNGorJPEG( files )
         }
     }
     return filesClone;
-}
-
-function finishedDirectory( files, completedFiles )
-{
-    if( completedFiles.length === files.length )
-    {
-        if( dirsToRecurseArray.length )
-        {
-            processDirectory( dirsToRecurseArray.splice( 0, 1 )[ 0 ] );
-        }
-        else
-        {
-            exit();
-        }
-    }
 }
 
 function exit( errCode )
@@ -129,13 +138,19 @@ function checkForDirectoriesToRecurse( files, fullInDir )
     {
         if( fs.lstatSync( fullInDir + files[ currentInc ] ).isDirectory() === true )
         {
-            dirsToRecurseArray.push( files.splice( currentInc, 1 )[ 0 ] );
+            // dirsToRecurseArray.push( files.splice( currentInc, 1 )[ 0 ] );
+            dirsToRecurseArray.push(
+                { dir : files.splice( currentInc, 1 )[ 0 ], parentDir : fullInDir }
+            );
         }
         else
         {
             currentInc++;
         }
     }
+
+    console.log( dirsToRecurseArray );
+    // exit();
 }
 
 function checkInDirExists()
