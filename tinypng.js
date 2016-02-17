@@ -35,13 +35,6 @@ function processDirectory( dir, parentDir )
     var fullOutDir = ( dir === "" ) ? ( mainDir + outDir + "/" + dir ) : ( parentDir.replace( "/in/", "/out/" ) + dir + "/" );
     createDirIfNotExists( fullOutDir );
 
-    console.log( "******" );
-    console.log( "fullInDir " + fullInDir );
-    console.log( "fullOutDir " + fullOutDir );
-    console.log( "dir " + dir );
-    console.log( "parentDir " + parentDir );
-    console.log( "******" );
-
     fs.readdir( fullInDir, ( err, files ) =>
     {
         if( err )
@@ -138,7 +131,6 @@ function checkForDirectoriesToRecurse( files, fullInDir )
     {
         if( fs.lstatSync( fullInDir + files[ currentInc ] ).isDirectory() === true )
         {
-            // dirsToRecurseArray.push( files.splice( currentInc, 1 )[ 0 ] );
             dirsToRecurseArray.push(
                 { dir : files.splice( currentInc, 1 )[ 0 ], parentDir : fullInDir }
             );
@@ -148,9 +140,6 @@ function checkForDirectoriesToRecurse( files, fullInDir )
             currentInc++;
         }
     }
-
-    console.log( dirsToRecurseArray );
-    // exit();
 }
 
 function checkInDirExists()
