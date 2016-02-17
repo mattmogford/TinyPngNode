@@ -43,7 +43,7 @@ function processDirectory( dir )
         }
 
         removeDSStore( files );
-        files = removeNonPNGorJPEG( files );
+
         if( files.length === 0 )
         {
             console.log( "There are no files in the " + fullInDir + " folder" );
@@ -51,6 +51,7 @@ function processDirectory( dir )
         }
 
         checkForDirectoriesToRecurse( files, fullInDir );
+        files = removeNonPNGorJPEG( files );
 
         // If Just contains directories, start recursing
         if( files.length === 0 )
