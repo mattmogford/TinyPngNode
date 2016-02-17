@@ -1,5 +1,5 @@
 # TinyPngNode
-A simple node script that can take a folder of images/folders and compress them, using the TinyPNG API
+A simple node script that can take a folder of images ( and nested folders/images ) and compress them, using the TinyPNG API
 
 * npm install
 * Add your TinyPNG API Dev key into the config.json, replacing the "INSERT_TINYPNG_DEV_KEY_HERE" string
