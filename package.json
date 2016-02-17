@@ -1,0 +1,16 @@
+{
+  "name": "tinypng",
+  "version": "1.0.0",
+  "description": "",
+  "main": "tinypng.js",
+  "scripts": {
+    "install": "mkdir img && mkdir img/in && mkdir img/out",
+    "start": "node tinypng.js",
+    "tinypng": "node tinypng.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "tinify": "^1.2.0"
+  }
+}
